@@ -14,6 +14,11 @@ Mod Fabric de capas para Minecraft Java. Um único jar cobre várias versões do
 | `versions/g4` | Minecraft 1.21.6 – 1.21.8 |
 | `versions/g5` | Minecraft 1.21.9 – 1.21.10 |
 | `versions/g6` | Minecraft 1.21.11 |
+| `versions/g7` | Minecraft 26.1 – 26.1.2 |
+| `versions/g8` | Minecraft 26.2 |
+| `versions/g9` | Minecraft 26.3 |
+
+Os grupos g1–g6 usam Fabric Loom com mapeamentos Yarn (remapeados para intermediary no jar). Os grupos g7–g9 (26.x) usam os nomes oficiais da Mojang direto, sem remapeamento; os jars do jogo são baixados para `.mccache/` na primeira compilação.
 
 `src/stubs` contém apenas assinaturas de APIs de terceiros (Mod Menu, Wavey Capes) usadas na compilação; nada disso entra no jar.
 

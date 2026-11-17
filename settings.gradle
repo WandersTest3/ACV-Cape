@@ -8,7 +8,7 @@ pluginManagement {
 
 rootProject.name = 'acv-cape'
 
-['g1', 'g2', 'g3', 'g4', 'g5', 'g6'].each {
+['g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8', 'g9'].each {
     include it
     project(":$it").projectDir = file("versions/$it")
 }

@@ -4,6 +4,7 @@ plugins {
 }
 
 def remapGroups = ['g1', 'g2', 'g3', 'g4', 'g5', 'g6']
+def plainGroups = ['g7', 'g8', 'g9']
 
 allprojects {
     group = 'max.panda'
@@ -51,6 +52,64 @@ sourceSets {
     stubs
 }
 
+configure(plainGroups.collect { project(":$it") }) {
+    apply plugin: 'java'
+
+    def cacheDir = new File(rootProject.projectDir, ".mccache/${project.minecraft_version}")
+    def libsFile = new File(projectDir, 'libs.txt')
+
+    def downloadMc = tasks.register('downloadMc') {
+        inputs.file libsFile
+        outputs.dir cacheDir
+        doLast {
+            cacheDir.mkdirs()
+            libsFile.readLines().findAll { it.trim() }.each { url ->
+                def name = url.tokenize('/').last()
+                def target = new File(cacheDir, name)
+                if (!target.exists()) {
+                    def tmp = new File(cacheDir, name + '.part')
+                    tmp.withOutputStream { out -> new URI(url).toURL().withInputStream { out << it } }
+                    tmp.renameTo(target)
+                }
+            }
+        }
+    }
+
+    dependencies {
+        compileOnly files(fileTree(cacheDir) { include '*.jar' }.builtBy(downloadMc))
+        compileOnly "net.fabricmc:fabric-loader:${rootProject.loader_version}"
+        compileOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+        compileOnly 'io.github.llamalad7:mixinextras-fabric:0.5.4'
+        compileOnly 'net.fabricmc:sponge-mixin:0.17.0+mixin.0.8.7'
+        compileOnly rootProject.sourceSets.main.output
+    }
+
+    sourceSets {
+        stubs {
+            compileClasspath += configurations.compileClasspath
+        }
+        main {
+            compileClasspath += stubs.output
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.release = 25
+        options.encoding = 'UTF-8'
+        if (name == 'compileJava') {
+            doLast {
+                destinationDirectory.get().asFileTree.matching { include '**/*.class' }.each { f ->
+                    def bytes = f.bytes
+                    if ((bytes[6] & 0xFF) == 0 && (bytes[7] & 0xFF) > 65) {
+                        bytes[7] = (byte)65
+                        f.bytes = bytes
+                    }
+                }
+            }
+        }
+    }
+}
+
 configurations {
     bundled {
         canBeConsumed = false
@@ -86,7 +145,7 @@ jar {
 tasks.register('mergedJar', Jar) {
     group = 'build'
     archiveBaseName = rootProject.archives_name
-    archiveVersion = "V${project.version}-1.21.x"
+    archiveVersion = "V${project.version}-1.21.x-26.x"
     destinationDirectory = layout.buildDirectory.dir('merged')
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from sourceSets.main.output
@@ -94,6 +153,13 @@ tasks.register('mergedJar', Jar) {
         def remapJar = project(":$name").tasks.named('remapJar')
         dependsOn remapJar
         from({ zipTree(remapJar.get().archiveFile) }) {
+            include 'max/panda/capechanger/**'
+        }
+    }
+    plainGroups.each { name ->
+        def sub = project(":$name")
+        dependsOn sub.tasks.named('classes')
+        from(sub.sourceSets.main.output) {
             include 'max/panda/capechanger/**'
         }
     }

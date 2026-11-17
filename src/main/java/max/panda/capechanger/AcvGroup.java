@@ -57,7 +57,13 @@ public final class AcvGroup {
             }
         }
 
-        if (var2 != 1 || var3 != 21) {
+        if (var2 == 26) {
+            if (var3 <= 1) {
+                return "g7";
+            }
+
+            return var3 == 2 ? "g8" : "g9";
+        } else if (var2 != 1 || var3 != 21) {
             throw new IllegalStateException("ACV Cape: unsupported Minecraft version " + var0);
         } else if (var4 <= 1) {
             return "g1";
