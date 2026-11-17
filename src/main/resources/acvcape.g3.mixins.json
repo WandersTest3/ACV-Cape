@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "max.panda.capechanger.g3.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "max.panda.capechanger.MixinGate",
+  "client": [
+    "AbstractClientPlayerEntityMixin",
+    "CapeFeatureMixin",
+    "ElytraFeatureMixin",
+    "PlayerListEntryMixin",
+    "PreviewLabelMixin",
+    "PreviewLivingLabelMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

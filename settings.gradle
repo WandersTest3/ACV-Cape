@@ -1,0 +1,14 @@
+pluginManagement {
+    repositories {
+        maven { url = 'https://maven.fabricmc.net/' }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'acv-cape'
+
+['g1', 'g2', 'g3', 'g4', 'g5', 'g6'].each {
+    include it
+    project(":$it").projectDir = file("versions/$it")
+}
