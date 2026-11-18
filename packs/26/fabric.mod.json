@@ -23,12 +23,6 @@
     ]
   },
   "mixins": [
-    "acvcape.g1.mixins.json",
-    "acvcape.g2.mixins.json",
-    "acvcape.g3.mixins.json",
-    "acvcape.g4.mixins.json",
-    "acvcape.g5.mixins.json",
-    "acvcape.g6.mixins.json",
     "acvcape.g7.mixins.json",
     "acvcape.g8.mixins.json",
     "acvcape.g9.mixins.json",
@@ -37,11 +31,8 @@
   "depends": {
     "fabricloader": ">=0.16.5",
     "fabric-api": "*",
-    "minecraft": [
-      ">=1.21 <1.21.12",
-      ">=26.1 <26.4"
-    ],
-    "java": ">=21"
+    "minecraft": ">=26.1 <26.4",
+    "java": ">=25"
   },
   "jars": [
     {

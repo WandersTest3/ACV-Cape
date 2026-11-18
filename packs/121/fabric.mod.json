@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "id": "acvcape",
+  "version": "${version}",
+  "name": "Acv Cape",
+  "description": "Use capa como bem entender",
+  "authors": [
+    "Wanders_Test3"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/acvcape/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "max.panda.capechanger.AcvLauncher"
+    ],
+    "client": [
+      "max.panda.capechanger.AcvLauncher"
+    ],
+    "modmenu": [
+      "max.panda.capechanger.AcvModMenu"
+    ]
+  },
+  "mixins": [
+    "acvcape.g1.mixins.json",
+    "acvcape.g2.mixins.json",
+    "acvcape.g3.mixins.json",
+    "acvcape.g4.mixins.json",
+    "acvcape.g5.mixins.json",
+    "acvcape.g6.mixins.json",
+    "acvcape.wavey.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.5",
+    "fabric-api": "*",
+    "minecraft": ">=1.21 <1.21.12",
+    "java": ">=21"
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/mixinextras-fabric-0.5.4.jar"
+    }
+  ]
+}

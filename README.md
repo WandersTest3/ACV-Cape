@@ -27,7 +27,7 @@ Os grupos g1–g6 usam Fabric Loom com mapeamentos Yarn (remapeados para interme
 Requer JDK 25.
 
 ```
-./gradlew mergedJar
+./gradlew mergedJar   # gera ACV-Cape-Fabric-V<versao>-1.21.x.jar e ACV-Cape-Fabric-V<versao>-26.x.jar
 ```
 
 O jar final fica em `build/merged/`.

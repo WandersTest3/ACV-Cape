@@ -142,30 +142,48 @@ jar {
     archiveClassifier = 'core'
 }
 
-tasks.register('mergedJar', Jar) {
+def registerPack = { String taskName, String suffix, String dir, List remapList, List plainList ->
+    tasks.register(taskName, Jar) {
+        group = 'build'
+        archiveBaseName = rootProject.archives_name
+        archiveVersion = "V${project.version}-${suffix}"
+        destinationDirectory = layout.buildDirectory.dir('merged')
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        def others = (remapGroups + plainGroups) - (remapList + plainList)
+        from(sourceSets.main.output) {
+            exclude 'fabric.mod.json'
+            others.each { exclude "acvcape.${it}.mixins.json" }
+        }
+        from("packs/${dir}") {
+            include 'fabric.mod.json'
+            filter { it.replace('${version}', project.version.toString()) }
+        }
+        remapList.each { name ->
+            def remapJar = project(":$name").tasks.named('remapJar')
+            dependsOn remapJar
+            from({ zipTree(remapJar.get().archiveFile) }) {
+                include 'max/panda/capechanger/**'
+            }
+        }
+        plainList.each { name ->
+            def sub = project(":$name")
+            dependsOn sub.tasks.named('classes')
+            from(sub.sourceSets.main.output) {
+                include 'max/panda/capechanger/**'
+            }
+        }
+        from(configurations.bundled) {
+            into 'META-INF/jars'
+        }
+    }
+}
+
+registerPack('mergedJar121', '1.21.x', '121', remapGroups, [])
+registerPack('mergedJar26', '26.x', '26', [], plainGroups)
+
+tasks.register('mergedJar') {
     group = 'build'
-    archiveBaseName = rootProject.archives_name
-    archiveVersion = "V${project.version}-1.21.x-26.x"
-    destinationDirectory = layout.buildDirectory.dir('merged')
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from sourceSets.main.output
-    remapGroups.each { name ->
-        def remapJar = project(":$name").tasks.named('remapJar')
-        dependsOn remapJar
-        from({ zipTree(remapJar.get().archiveFile) }) {
-            include 'max/panda/capechanger/**'
-        }
-    }
-    plainGroups.each { name ->
-        def sub = project(":$name")
-        dependsOn sub.tasks.named('classes')
-        from(sub.sourceSets.main.output) {
-            include 'max/panda/capechanger/**'
-        }
-    }
-    from(configurations.bundled) {
-        into 'META-INF/jars'
-    }
+    dependsOn 'mergedJar121', 'mergedJar26'
 }
 
 assemble.dependsOn mergedJar
