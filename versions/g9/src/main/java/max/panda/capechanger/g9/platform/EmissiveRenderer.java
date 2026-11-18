@@ -35,7 +35,7 @@ public final class EmissiveRenderer {
                 var3.submitModel(var0, var1, var2, RenderTypes.entityTranslucent(var4), 15728880, OverlayTexture.NO_OVERLAY, Integer.MIN_VALUE);
             }
 
-            var3.submitModel(var0, var1, var2, RenderTypes.entityTranslucentEmissive(var5), 15728880, OverlayTexture.NO_OVERLAY, -1);
+            var3.submitModel(var0, var1, var2, RenderTypes.entityTranslucentEmissive(var5), 15728880, OverlayTexture.NO_OVERLAY, 0);
         } catch (Throwable var7) {
         }
     }
@@ -47,7 +47,7 @@ public final class EmissiveRenderer {
                 return;
             }
 
-            var3.order(8).submitModel(var0, var1, var2, RenderTypes.armorCutoutNoCull(var5), 15728880, OverlayTexture.NO_OVERLAY, -1);
+            var3.order(8).submitModel(var0, var1, var2, RenderTypes.armorCutoutNoCull(var5), 15728880, OverlayTexture.NO_OVERLAY, 0);
         } catch (Throwable var6) {
         }
     }
