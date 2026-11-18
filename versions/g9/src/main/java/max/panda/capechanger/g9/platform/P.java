@@ -72,16 +72,18 @@ public final class P {
         return Minecraft.getInstance().hasControlDown();
     }
 
+    public static KeyEvent lastKey;
+
     public static KeyMapping createKey(String var0, int var1, String var2) {
         if (keyCategory == null) {
             keyCategory = Category.register(Identifier.fromNamespaceAndPath("acvcape", "main"));
         }
 
-        return new KeyMapping(var0, var1, keyCategory);
+        return new KeyMapping(var0, InputMap.toNativeKey(var1), keyCategory);
     }
 
     public static boolean keyMatches(KeyMapping var0, int var1, int var2) {
-        return var0 != null && var0.matches(new KeyEvent(var1, var2, 0));
+        return var0 != null && lastKey != null && var0.matches(lastKey);
     }
 
     public static PlayerSkin skinOf(AbstractClientPlayer var0) {

@@ -102,7 +102,7 @@ public abstract class AcvScreen extends Screen {
     }
 
     private MouseButtonEvent click(double var1, double var3, int var5) {
-        return new MouseButtonEvent(var1, var3, new MouseButtonInfo(var5, this.lastModifiers));
+        return new MouseButtonEvent(var1, var3, new MouseButtonInfo(InputMap.toNativeButton(var5), this.lastModifiers));
     }
 
     protected final boolean superMouseDown(double var1, double var3, int var5) {
@@ -122,26 +122,31 @@ public abstract class AcvScreen extends Screen {
     }
 
     protected final boolean superKey(int var1, int var2, int var3) {
-        return super.keyPressed(new KeyEvent(var1, var2, var3));
+        KeyEvent var4 = P.lastKey;
+        if (var4 == null || InputMap.toLegacyKey(var4.key()) != var1) {
+            var4 = new KeyEvent(InputMap.toNativeKey(var1), var2, var3);
+        }
+
+        return super.keyPressed(var4);
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent var1, boolean var2) {
         this.lastDoubled = var2;
         this.lastModifiers = var1.buttonInfo().modifiers();
-        return this.onMouseDown(this.virtual(var1.x()), this.virtual(var1.y()), var1.button());
+        return this.onMouseDown(this.virtual(var1.x()), this.virtual(var1.y()), InputMap.toLegacyButton(var1.button()));
     }
 
     @Override
     public boolean mouseReleased(MouseButtonEvent var1) {
         this.lastModifiers = var1.buttonInfo().modifiers();
-        return this.onMouseUp(this.virtual(var1.x()), this.virtual(var1.y()), var1.button());
+        return this.onMouseUp(this.virtual(var1.x()), this.virtual(var1.y()), InputMap.toLegacyButton(var1.button()));
     }
 
     @Override
     public boolean mouseDragged(MouseButtonEvent var1, double var2, double var4) {
         this.lastModifiers = var1.buttonInfo().modifiers();
-        return this.onMouseDrag(this.virtual(var1.x()), this.virtual(var1.y()), var1.button(), this.virtual(var2), this.virtual(var4));
+        return this.onMouseDrag(this.virtual(var1.x()), this.virtual(var1.y()), InputMap.toLegacyButton(var1.button()), this.virtual(var2), this.virtual(var4));
     }
 
     @Override
@@ -151,7 +156,8 @@ public abstract class AcvScreen extends Screen {
 
     @Override
     public boolean keyPressed(KeyEvent var1) {
-        return this.onKey(var1.key(), var1.keycode(), var1.modifiers());
+        P.lastKey = var1;
+        return this.onKey(InputMap.toLegacyKey(var1.key()), var1.keycode(), var1.modifiers());
     }
 
     @Override
